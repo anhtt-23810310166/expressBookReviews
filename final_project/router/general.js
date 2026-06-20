@@ -4,7 +4,21 @@ let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
 
-// Task 1: Lấy danh sách tất cả sách sử dụng Async/Await
+// Đăng ký người dùng mới
+public_users.post("/register", (req, res) => {
+  const { username, password } = req.body;
+  if (username && password) {
+    if (!users.find(u => u.username === username)) {
+      users.push({ username, password });
+      return res.status(200).json({ message: "Customer successfully registered. Now you can login" });
+    } else {
+      return res.status(404).json({ message: "User already exists!" });
+    }
+  }
+  return res.status(404).json({ message: "Unable to register user." });
+});
+
+// Task 10: Lấy danh sách tất cả sách sử dụng Async/Await
 public_users.get('/', async function (req, res) {
   try {
     const getAllBooks = () => Promise.resolve(books);
@@ -15,7 +29,7 @@ public_users.get('/', async function (req, res) {
   }
 });
 
-// Task 2: Lấy thông tin sách dựa trên ISBN sử dụng Async/Await
+// Task 11: Lấy thông tin sách dựa trên ISBN sử dụng Async/Await
 public_users.get('/isbn/:isbn', async function (req, res) {
   try {
     const isbn = req.params.isbn;
@@ -32,7 +46,7 @@ public_users.get('/isbn/:isbn', async function (req, res) {
   }
 });
   
-// Task 3: Lấy thông tin sách dựa trên Tác giả sử dụng Async/Await
+// Task 12: Lấy thông tin sách dựa trên Tác giả sử dụng Async/Await
 public_users.get('/author/:author', async function (req, res) {
   try {
     const author = req.params.author;
@@ -51,7 +65,7 @@ public_users.get('/author/:author', async function (req, res) {
   }
 });
 
-// Task 4: Lấy thông tin sách dựa trên Tiêu đề sử dụng Async/Await
+// Task 13: Lấy thông tin sách dựa trên Tiêu đề sử dụng Async/Await
 public_users.get('/title/:title', async function (req, res) {
   try {
     const title = req.params.title;
@@ -70,7 +84,7 @@ public_users.get('/title/:title', async function (req, res) {
   }
 });
 
-// Lấy thông tin review sách
+// Lấy thông tin review sách dựa trên ISBN
 public_users.get('/review/:isbn', function (req, res) {
   const isbn = req.params.isbn;
   if (books[isbn]) {
